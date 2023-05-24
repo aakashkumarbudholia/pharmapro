@@ -78,7 +78,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 <div class="page-logo">
                     <a href="javascript:void(0)" onClick="window.location.reload()">
                        
-            <img src="{{ asset('logo/Logo1.png') }}" alt="" style="width: 199px;margin: -7px 0px 0px !important; " class="logo-default" /> </a> 
+            <img src="{{ asset('assets/layouts/layout4/front/images1/logo-pharmajob-transp_new.png') }}" alt="" style="width: 199px;margin: 7px 0px 0px !important; " class="logo-default" /> </a> 
                     <!-- <h2 style="color: #fff;">CapActix</h2> -->
                     <div class="menu-toggler sidebar-toggler">
                         <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
@@ -155,7 +155,7 @@ License: You must have a valid license purchased only from themeforest(the above
         </div>
         <!-- END CONTAINER -->
         <!-- BEGIN FOOTER -->
-        @include('layouts.footer')
+      
         <!-- END FOOTER -->
         <!-- BEGIN QUICK NAV -->
         

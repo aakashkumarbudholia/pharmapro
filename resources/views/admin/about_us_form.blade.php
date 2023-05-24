@@ -1,83 +1,94 @@
-@extends('layouts.admin_master')
+@extends('layouts.admin_master_new')
 @section('content')
 <?php
 
     $about_us_id = isset($about_us->id) ? $about_us->id : '';
     $title = isset($about_us->id) ? $about_us->title : '';
     $description = isset($about_us->id) ? $about_us->description : '';
-?>
-<div class="page-content">
-    <!-- BEGIN PAGE HEAD-->
-    
-    <!-- END PAGE HEAD-->
-    <!-- BEGIN PAGE BREADCRUMB -->
-    <ul class="page-breadcrumb breadcrumb">
-        <li>
-            <a href="{{ url('admin/services') }}">About Us</a>
-            
-        </li>
-        <!-- <li>
-            <span class="active"></span>
-        </li> -->
-    </ul>
-    <!-- END PAGE BREADCRUMB -->
+    $titlefr = isset($about_us->id) ? $about_us->titlefr : '';
+    $descriptionfr = isset($about_us->id) ? $about_us->descfr : ''; 
 
-    <div class="row">
-        <div class="col-md-12">
-            <!-- BEGIN EXAMPLE TABLE PORTLET-->
-            <div class="tabbable-line boxless tabbable-reversed">
-                <div class="tab-pane active" id="tab_5">
-                    @include('layouts.flash-message')
-                    <div class="portlet box blue ">
-                        <div class="portlet-title">
-                            <div class="caption">
-                                <i class="fa fa-gift"></i>About Us </div>
+?>
+<div class="page-content">   
+
+    <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <p class="mb-4">
+                        @include('layouts.flash-message')
+                    </p>
+                    <!-- Page Heading -->
+                    <!-- <h1 class="h3 mb-2 text-gray-800">Hello, {{ session('user_name') }}</h1> -->
+                    <p class="mb-4">
+                        <ul class="page-breadcrumb breadcrumb">
+                            <li>
+                                <a href="{{ url('admin/services') }}">About Us</a>
+                            </li>                            
+                        </ul>
+                    </p>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                <i class="fa fa-gift" style="margin-right: 5px;"></i>About Us
+                            </h6>
                         </div>
-                        <div class="portlet-body form">
-                            <!-- BEGIN FORM-->
                             
+                            <div class="card-body">
+                                <!-- BEGIN FORM-->                            
                             <form action="{{ url('admin/about/update') }}" class="form-horizontal form-bordered" name="frmAboutUs" id="frmAboutUs" method="POST">
                             @csrf
                                 <input type="hidden" name="about_us_id" id="$about_us_id" value="{{ $about_us_id }}">
                                 <div class="form-body">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">About Us Title *</label>
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-3">About Us Title for EN *</label>
                                         <div class="col-md-9">
-                                            <input type="text" name="title" id="title" placeholder="Enter Title" class="form-control" value="{{ $title }}">
-                                            <!-- <span class="help-block"> This is inline help </span> -->
+                                            <input type="text" name="title" id="title" placeholder="Enter Title for EN" class="form-control" value="{{ $title }}">                                           
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                        <label class="control-label col-md-3">About Us Contant *</label>
+                                <div class="form-group row">
+                                        <label class="control-label col-md-3">About Us Contant  for EN*</label>
                                         <div class="col-md-9">                      
-                                            <textarea name="description" id="description" placeholder="Description" class="form-control" rows="4" required="">{{ $description }}</textarea>
+                                            <textarea name="description" id="description" placeholder="Description for EN" class="form-control" rows="4" required="">{{ $description }}</textarea>
+                                        </div>
+                                </div>
+
+
+                                <div class="form-body">
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-3">About Us Title for FR *</label>
+                                        <div class="col-md-9">
+                                            <input type="text" name="titlefr" id="titlefr" placeholder="Enter Title for FR" class="form-control" value="{{ $titlefr }}">                                           
                                         </div>
                                     </div>
-                                <div class="form-actions">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="row">
-                                                <div class="col-md-offset-3 col-md-9">
-                                                    <button type="submit" class="btn green">
-                                                        <i class="fa fa-check"></i> Submit</button>
-                                                    <button type="reset" class="btn default">Clear</button>
-                                                </div>
-                                            </div>
+                                </div>
+                                <div class="form-group row">
+                                        <label class="control-label col-md-3">About Us Contant for FR *</label>
+                                        <div class="col-md-9">                      
+                                            <textarea name="descriptionfr" id="descriptionfr" placeholder="Description for FR" class="form-control" rows="4" required="">{{ $descriptionfr }}</textarea>
                                         </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="control-label col-md-3"></label>
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            <i class="fa fa-check"></i> Submit</button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="reset" class="btn btn-google btn-user btn-block">Clear</button>
                                     </div>
                                 </div>
                             </form>
                             <!-- END FORM-->
-                        </div>
+                            </div>
                     </div>
-                </div>
-            </div>
-            <!-- END EXAMPLE TABLE PORTLET-->
-        </div>
-    </div>
-</div>
 
+                </div>
+                <!-- /.container-fluid -->
+</div>
 @endsection
 
 @push('scripts')
@@ -87,6 +98,7 @@
     <script src="{{ asset('assets/layouts/layout4/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
     <script>
         CKEDITOR.replace( 'description' );
+	 CKEDITOR.replace( 'descriptionfr' );
     </script>
 
     <script type="text/javascript">

@@ -13,7 +13,7 @@ class ProfileController extends Controller
     public function index(){
     	$profile_data = Profile::first();
 
-        return view('admin.profile',compact('action','profile_data'));
+        return view('admin.profile',compact('profile_data'));
     }
 
     public function update(Request $request)

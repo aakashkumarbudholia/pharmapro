@@ -9,6 +9,7 @@ use App\Admin_login;
 use DB;
 use Session;
 use App\GeneralModel;
+use App\Notiemail;
 
 class Admin_loginController extends Controller
 {
@@ -18,7 +19,31 @@ class Admin_loginController extends Controller
     }
 
     public function index()
-    {
+    { 
+         /*  $delete_prev_35day = DB::table('job_post')
+        ->where('created_at', '<', date_sub(NOW(), date_interval_create_from_date_string("35 days")))
+        ->delete(); */
+
+	$update_detail = DB::table('job_post')
+                    ->where('created_at', '<', date_sub(NOW(), date_interval_create_from_date_string("35 days")))
+                    ->update(array('is_deleted' => true));
+
+        
+        $urgent_14day = DB::table('job_post')
+                      ->where('created_at','<',date_sub(NOW(),date_interval_create_from_date_string("14 days")))
+                      ->where('urgent','=','Oui')
+                      ->select('id')
+                      ->get();
+      
+      if(!empty($urgent_14day)){
+        foreach($urgent_14day as $key => $val){
+          if(!empty($val->id)){
+            $update_urgent = DB::table('job_post')
+                              ->where('id', $val->id)
+                              ->update(array('urgent' => 'Non'));
+          }
+        }
+      }
         return view('admin_login');
     }
     
@@ -26,6 +51,91 @@ class Admin_loginController extends Controller
     {
         $username = $request->input('username');
         $password = $request->input('password');
+
+
+	// noti email send start
+
+		$Date = date('Y-m-d');
+
+		$getdata = DB::table('noti_email')
+                                ->where('status','=',0)
+                                ->where('email_date','=',$Date)
+                                ->get();
+
+
+		foreach($getdata as  $k=>$v)
+		{
+
+			$jobs = DB::table('job_post')
+		                 ->select('*')
+		                 ->where('job_id',$v->job_ids)
+		                 ->first();
+
+			$users = DB::table('users')
+		                 ->select('*')
+		                 ->where('id',$v->user_id)
+		                 ->first();
+
+			$noti = DB::table('notification')
+		                 ->select('*')
+		                 ->where('days',$v->noti)
+		                 ->first();
+
+	if(isset($users)){
+
+		if(isset($jobs->company))
+		{
+
+			 $jobtitle = str_replace(' ', '-', $jobs->company);
+			 $jobtitle = str_replace('/', '-', $jobtitle);
+	
+			$jobtitle = strtr(utf8_decode($jobtitle), utf8_decode('ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæçèéêëìíîïñòóôõöøùúûüýÿĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĹĺĻļĽľĿŀŁłŃńŅņŇňŉŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſƒƠơƯưǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǺǻǼǽǾǿ'), 'AAAAAAAECEEEEIIIIDNOOOOOOUUUUYsaaaaaaaeceeeeiiiinoooooouuuuyyAaAaAaCcCcCcCcDdDdEeEeEeEeEeGgGgGgGgHhHhIiIiIiIiIiIJijJjKkLlLlLlLlllNnNnNnnOoOoOoOEoeRrRrRrSsSsSsSsTtTtTtUuUuUuUuUuUuWwYyYZzZzZzsfOoUuAaIiOoUuUuUuUuUuAaAEaeOo');
+
+		$jobtitle = strtolower($jobtitle);
+
+			$urls = "https://www.pharmapro.fr/offre-emploi/".$jobs->job_id."/".$jobtitle;
+			$linkurl = "<a href=$urls>$urls</a>";
+
+			  $from = 'info@pharmapro.fr';
+				 $cc = 'xavier.gruffat@gmail.com';
+
+			  $to = $users->email;
+			  $subject = $noti->title;
+			  $headers  = 'MIME-Version: 1.0' . "\r\n";
+			  $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			  $headers .= 'From: '.$from."\r\n".
+			      'Reply-To: '.$from."\r\n" .
+				 'Cc: '.$cc."\r\n" .
+			      'X-Mailer: PHP/' . phpversion();
+
+		
+			$message =  str_replace("title",$users->title,$noti->description);
+			$message =  str_replace("surname",$users->last_name,$message);
+			$message =  str_replace("url",$linkurl,$message);
+
+			// $mail = mail($to,$subject,$message,$headers);
+
+		}
+	}
+
+
+			  
+			
+
+			$data = array(
+                        'status' => 1,
+                    	);
+
+			Notiemail::where('id',$v->id)->update($data);
+
+
+			
+
+		}
+
+
+		// noti email send end
+
 	
 
          $Admin_login = new Admin_login();

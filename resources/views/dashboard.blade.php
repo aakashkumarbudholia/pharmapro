@@ -24,48 +24,155 @@
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $keys = substr(str_shuffle(str_repeat($pool, 10)), 0, 10);
     ?>
-    <div class="btn-group" style="float: right;margin-bottom: 20px;">
+    <!-- <div class="btn-group" style="float: right;margin-bottom: 20px;">
         <a href="{{ url('interview') }}/<?php echo $keys ?>" class="btn sbold green"> Add New
             <i class="fa fa-plus"></i>
         </a>
-    </div>
+    </div> -->
 
-    <table class="table table-striped table-bordered table-hover table-checkable order-column datatables" >
-        <thead>
-            <tr>
-                <td>Interviewer Name</td>
-                <td>Interviewee Name</td>
-                <td>Interview With</td>
-                <td>Occupation</td>
-                <td>Email</td>
-                <td>Phone</td>
-                <td>Action</td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if(!empty($interviewdata)){
-                    foreach ($interviewdata as $key => $value) {
-            ?>
-                        <tr class="odd gradeX">
-                            <td><?php echo $value->name.' '.$value->lname; ?></td>
-                            <td><?php echo $value->name_wee.' '.$value->surname_wee; ?></td>
-                            <td><?php echo $value->interview_with; ?></td>
-                            <td><?php echo $value->occupation; ?></td>
-                            <td><?php echo $value->email; ?></td>
-                            <td><?php echo $value->phone; ?></td>
-                            <td>
-                                <?php $url = 'interview/'.$value->iid; ?>
-                                <a href="{{ url($url) }}"><i class="icon-pencil"></i></a>
-                                <?php $url = 'delete_interview/'.$value->iid; ?>
-                                <a href="{{ url($url) }}" data-toggle="confirmation" data-original-title="Are you sure you want to delete ?" aria-describedby="confirmation783017"><i class="icon-trash"></i></a>
-                            </td>
-                        </tr>
-            <?php            
-                    }
-            } ?>
-            
-        </tbody>
-    </table>
+	 @include('layouts.flash-message')
+
+    <table class="table table-striped table-bordered table-hover order-column datatables" >
+                        <thead>
+                            <tr>
+				<td>Job Post Date</td>
+				<td>Job ID</td>
+                                <td>Employer Name</td>
+                                <td>Job title</td>
+                                <!-- <td>Service</td> -->
+                                <td>Company</td>
+				<td>Paid Status</td>
+                <td>Status</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if(!empty($job_post)){
+                                    foreach ($job_post as $key => $value) {
+                            ?>
+                                        <tr class="odd gradeX">
+
+					<td>{{ isset($value->created_at) ? $value->created_at : '' }}</td>
+					    <td style="max-width: 200px !important;">
+                            {{ isset($value->job_id) ? $value->job_id : '' }}  
+                            
+                            <br><span style="color:#009c08"><?php 
+                                        if($value->user_type == 'paid'){
+                                            echo "Premium";
+                                        }
+                                    ?>
+                                </span>                                        
+                            </br>
+                            
+                        </td>
+                                            <td>
+                                                <?php
+						
+                                                if(isset($value->user_id) && !empty($value->user_id)){
+                                                    $user_info = DB::table('users')
+                                                        ->where('id','=',$value->user_id)
+                                                        ->first();
+
+                                                    echo isset($user_info->first_name) ? $user_info->first_name : ' Published via form';
+
+                                                    echo isset($user_info->last_name) ? ' '.$user_info->last_name : ' Published via form';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>{{ isset($value->job_title) ? $value->job_title : '' }}</td>
+                                            <!-- <td>{{ isset($value->title) ? $value->title : '' }}</td> -->
+                                            
+                                            <td>{{ isset($value->company) ? $value->company : '' }}</td>
+
+<?php 
+
+$status = "";
+
+if ($value->is_deleted == 1)
+{
+$status = "Inactive";
+} elseif ($value->status == 1)
+{
+$status = "Active";
+} else {
+$status = "Blocked";
+}
+
+$paid_status = "";
+
+if ($value->user_type == 'paid') 
+{
+    if ($value->paid_status == 1)
+    {
+        $paid_status = "Paid";
+    } 
+    else 
+    {
+        $paid_status = "Unpaid";
+    }
+}
+else
+{
+    $paid_status = "Free";
+}
+
+
+?>
+
+
+
+					   <td><?php echo $paid_status ; ?></td>
+                       <td><?php echo $status ; ?></td>
+
+                                            <td>
+
+						 <?php $url = 'admin/publication-formulaire-offre-emploi/edit/'.$value->id; 
+							$url_reactive = 'admin/publication-formulaire-offre-emploi/edit_reactive/'.$value->id;
+?>
+
+						<a href="{{ url($url) }}" >Edit |</a>
+
+						<?php $url = 'admin/job/status/'.$value->id.'/'.$value->status; ?>
+
+						<a href="{{ url($url) }}" data-toggle="confirmation" data-original-title="Are you sure you want to change status ?" aria-describedby="confirmation783017">| Update Job Status |</a>
+
+						 <?php if ($value->is_deleted == true) {?>
+
+                                    <?php $url = 'admin/job/reactive/' . $value->id;
+					 ?>
+                                 <!--   <a href="{{ url($url) }}" data-toggle="confirmation" data-original-title="Are you sure you want to reactive ?" aria-describedby="confirmation783017"  class="reactivet_btn">
+                                       {{ __('message.reactive') }}</a> -->
+
+
+		<a href="{{ url($url_reactive) }}" class="reactivet_btn">{{ __('message.reactive') }}</a>
+
+
+                                    <?php }else{?>
+
+                        <?php $url = 'admin/job/delete/'.$value->id; ?>
+
+                        <a href="{{ url($url) }}" data-toggle="confirmation" data-original-title="Are you sure you want to delete ?" aria-describedby="confirmation783017">Delete Job </a>
+<?php } ?>
+
+					  <?php $url = 'admin/job/deleteadmin/'.$value->id; ?>
+
+                        <a href="{{ url($url) }}" data-toggle="confirmation" data-original-title="Are you sure you want to delete ?" aria-describedby="confirmation783017">| Delete def. Job </a>
+
+
+
+                                                <?php $url = 'admin/job/view/'.$value->id; ?>
+                                                <a href="{{ url($url) }}">| View Details |</a>
+
+                                                <?php $url = 'admin/view-applied-job/'.$value->iid; ?>
+                                                <a href="{{ url($url) }}">View Applied job </a>
+                                            </td>
+                                        </tr>
+                            <?php        
+                                    }
+                            } ?>
+                            
+                        </tbody>
+                    </table>
 
     <div class="row">
         <div class="col-md-12">

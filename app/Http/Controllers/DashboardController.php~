@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use DB;
+use Session;
+use Redirect;
+
+class DashboardController extends Controller
+{
+	function __construct()
+	{
+		date_default_timezone_set('Europe/Paris');
+	}
+
+    public function index()
+    { 	
+    	$job_post = DB::table('job_post')
+            ->leftjoin('services','job_post.service','=','services.id')
+            ->select('job_post.*','services.title','services.price')
+            // ->orderBy('job_post.id', 'desc')
+	    ->orderBy('job_post.id','desc')
+            // ->limit(10)
+            ->get();
+
+echo "<pre>"; print_r($job_post);exit;
+
+	
+        return view('dashboard',compact('job_post'));
+    }
+
+    public function logout()
+  	{
+	    Session::flush();               
+      	return Redirect::to('/admin');
+	}
+}

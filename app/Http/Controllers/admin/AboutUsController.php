@@ -23,10 +23,14 @@ class AboutUsController extends Controller
     	$about_us_id = $request->input('about_us_id');
     	$title = $request->input('title');
 		$description = $request->input('description');
+$titlefr = $request->input('titlefr');
+		$descriptionfr = $request->input('descriptionfr');
 
 		$data = array(
                         'title' => $title,
                         'description'=> $description,
+			'titlefr' => $titlefr,
+                        'descfr'=> $descriptionfr,
                     );
 
 		AboutUs::where('id',$about_us_id)->update($data);

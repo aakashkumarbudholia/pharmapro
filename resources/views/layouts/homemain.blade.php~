@@ -1,0 +1,49 @@
+<!doctype html>
+<?php
+$url = url()->current();
+
+$segment1 =  Request::segment(1); 
+
+$last = DB::table('seo_tags')->select('*')->where('page_name','home')->orderBy('id', 'desc')->first();
+$tag = $last->tag;
+$title = $last->title;
+$desc = $last->desc;
+
+$lang = session('lang');
+App::setLocale($lang);
+
+?>
+
+<html lang="{{ app()->getLocale() }}">
+
+<head>
+  <title>Pharmaemploi.fr - Emplois pour pharmacien (H/F)</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="language" content="fr">
+  
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="keywords" content="{{$title}}">
+<meta name="description" content="{{$desc}}">
+
+
+<link rel='icon' href="{{ asset('assets/layouts/layout4/front/images1/favicon-16x16.png') }}" type='image/x-icon'/ >
+<link rel="stylesheet" href="{{ asset('assets/layouts/layout4/front/css/css1/bootstrap.css') }}" type="text/css"> 
+<link rel="stylesheet" href="{{ asset('assets/layouts/layout4/front/css/css1/owl.carousel.min.css') }}" type="text/css"> 
+<link rel="stylesheet" href="{{ asset('assets/layouts/layout4/front/css/css1/foowl.theme.defaultntello.css') }}" type="text/css"> 
+<link rel="stylesheet" href="{{ asset('assets/layouts/layout4/front/css/css1/all.css') }}" type="text/css"> 
+<link rel="stylesheet" href="{{ asset('assets/layouts/layout4/front/css/css1/style.css') }}" type="text/css"> 
+<link rel="stylesheet" href="{{ asset('assets/layouts/layout4/front/css/css1/query.css') }}" type="text/css"> 
+
+<!-- Hotjar Tracking Code for www.pharmaemploi.fr -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1707796,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+</head>

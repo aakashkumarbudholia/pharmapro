@@ -29,12 +29,12 @@ class IntervieweeController extends Controller
 		$last_name = $request->input('last_name');
 		$email = $request->input('email');
 		$password = $request->input('password');
-
+        $enc_password = base64_encode($password);
 		$data = array(
                         'first_name' => $first_name,
                         'last_name'=> $last_name,
                         'email'=> $email,
-                        'password'=> $password,
+                        'password'=> $enc_password,
                     );
 
 		AdminInterviewee::UpdateOrCreate($data);
@@ -55,12 +55,12 @@ class IntervieweeController extends Controller
 		$last_name = $request->input('last_name');
 		$email = $request->input('email');
 		$password = $request->input('password');
-
+        $enc_password = base64_encode($password);
 		$data = array(
                         'first_name' => $first_name,
                         'last_name'=> $last_name,
                         'email'=> $email,
-                        'password'=> $password,
+                        'password'=> $enc_password,
                     );
 
 		AdminInterviewee::where('id',$id)->update($data);

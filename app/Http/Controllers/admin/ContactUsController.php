@@ -20,13 +20,18 @@ class ContactUsController extends Controller
 
     public function update(Request $request)
     {
+
     	$contact_us_id = $request->input('contact_us_id');
     	$title = $request->input('title');
 		$description = $request->input('description');
+	$titlefr = $request->input('titlefr');
+		$descriptionfr = $request->input('descriptionfr');
 
 		$data = array(
                         'title' => $title,
                         'description'=> $description,
+			 'titlefr' => $titlefr,
+                        'descfr'=> $descriptionfr,
                     );
 
 		ContactUs::where('id',$contact_us_id)->update($data);

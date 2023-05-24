@@ -25,11 +25,15 @@ class ServicesController extends Controller
 
     public function insert(Request $request)
     {
-    	$title = $request->input('title');
+        $title = $request->input('title');
+    	$price = $request->input('price');
+	$lang = $request->input('lang');
 		$description = $request->input('description');
 
 		$data = array(
                         'title' => $title,
+                        'price' => $price,
+			'lang' => $lang,
                         'description'=> $description,
                     );
 
@@ -47,11 +51,15 @@ class ServicesController extends Controller
     public function update(Request $request)
     {
     	$service_id = $request->input('service_id');
-    	$title = $request->input('title');
+        $title = $request->input('title');
+    	$price = $request->input('price');
+	    $lang = $request->input('lang');
 		$description = $request->input('description');
 
 		$data = array(
                         'title' => $title,
+                        'price' => $price,
+			 'lang' => $lang,
                         'description'=> $description,
                     );
 

@@ -1,0 +1,1 @@
+<iframe src="http://180.211.107.130:8080/pharmapro/public/joblist1" style="width: 100%; height: 100%" scrolling="off"></iframe>
